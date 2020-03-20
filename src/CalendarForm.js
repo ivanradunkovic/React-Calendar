@@ -34,16 +34,18 @@ function CalendarForm({ calendarStore, calendarEvent, onCancel, edit }) {
     if (!title || !start || !end) {
       return;
     }
-if (+start > +end) {
+      if (+start > +end) {
       alert("Start date must be earlier than end date");
       return;
     }
+
     const data = { id, title, start, end };
     if (!edit) {
       await addCalendar(data);
     } else {
       await editCalendar(data);
     }
+
     const response = await getCalendar();
     const evs = response.data.map(d => {
       return {
@@ -52,14 +54,17 @@ if (+start > +end) {
         end: new Date(d.end)
       };
     });
+
     calendarStore.setCalendarEvents(evs);
     onCancel();
 
 };
+
 const handleStartChange = date => setStart(date);
 const handleEndChange = date => setEnd(date);
 const handleTitleChange = ev => setTitle(ev.target.value);
 const deleteCalendarEvent = async () => {
+
   await deleteCalendar(calendarEvent.id);
   const response = await getCalendar();
   const evs = response.data.map(d => {
@@ -69,6 +74,7 @@ const deleteCalendarEvent = async () => {
       end: new Date(d.end)
     };
   });
+  
   calendarStore.setCalendarEvents(evs);
   onCancel();
 };
