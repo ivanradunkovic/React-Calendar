@@ -29,4 +29,30 @@ function CalendarForm({ calendarStore, calendarEvent, onCancel, edit }) {
     calendarEvent.id
   ]);
 
+  const handleSubmit = async ev => {
+    ev.preventDefault();
+    if (!title || !start || !end) {
+      return;
+    }
+if (+start > +end) {
+      alert("Start date must be earlier than end date");
+      return;
+    }
+    const data = { id, title, start, end };
+    if (!edit) {
+      await addCalendar(data);
+    } else {
+      await editCalendar(data);
+    }
+    const response = await getCalendar();
+    const evs = response.data.map(d => {
+      return {
+        ...d,
+        start: new Date(d.start),
+        end: new Date(d.end)
+      };
+    });
+    calendarStore.setCalendarEvents(evs);
+    onCancel();
+
   export default observer(CalendarForm);
